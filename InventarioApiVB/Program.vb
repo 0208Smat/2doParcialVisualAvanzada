@@ -83,6 +83,7 @@ Module Program
         End If
 
         app.UseHttpsRedirection()
+        app.MapGet("/", Function() Results.Redirect("/swagger/index.html")).ExcludeFromDescription()
         app.MapControllers()
 
         app.Run()
