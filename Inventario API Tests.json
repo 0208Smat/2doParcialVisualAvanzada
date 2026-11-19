@@ -1,0 +1,565 @@
+{
+  "info": {
+    "name": "Inventario API Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Registrar Categoria",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{baseUrl}}/api/categorias",
+          "protocol": "",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "categorias"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Cat Test {{testSufijo}}\",\n  \"descripcion\": \"Categoría generada para pruebas automatizadas\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "// Generar un sufijo aleatorio para evitar conflictos de nombres al correr múltiples veces",
+              "const uuid = require('crypto').randomUUID().substring(0, 6);",
+              "pm.variables.set(\"testSufijo\", uuid);"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "// Tests",
+              "pm.test(\"Debe retornar 201 Created\", function() {",
+              "  pm.expect(pm.response.code).to.equal(201);",
+              "});",
+              "",
+              "pm.test(\"Debe devolver el ID de la nueva categoría\", function() {",
+              "  pm.expect(pm.response.json().id).to.be.a(\"number\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Registrar Producto asociado a categoria",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{baseUrl}}/api/productos",
+          "protocol": "",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "productos"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Prod Test {{testSufijo}}\",\n  \"descripcion\": \"Producto de prueba automatizada\",\n  \"precio\": 150.50,\n  \"stock\": 10,\n  \"categoriaId\": {{categoriaId}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "// Tests",
+              "pm.test(\"Debe retornar 201 Created\", function() {",
+              "  pm.expect(pm.response.code).to.equal(201);",
+              "});",
+              "",
+              "pm.test(\"Debe estar asociado a la categoría creada\", function() {",
+              "  pm.expect(pm.response.json().categoriaId).to.equal(pm.variables.get(\"categoriaId\"));",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Consultar todos los productos",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{baseUrl}}/api/productos",
+          "protocol": "",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "productos"
+          ],
+          "query": [],
+          "variable": []
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "// Tests",
+              "pm.test(\"Debe retornar 200 OK\", function() {",
+              "  pm.expect(pm.response.code).to.equal(200);",
+              "});",
+              "",
+              "pm.test(\"El resultado debe ser un arreglo de productos\", function() {",
+              "  pm.expect(pm.response.json()).to.be.an(\"array\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Consultar todas las categorias",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{baseUrl}}/api/categorias",
+          "protocol": "",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "categorias"
+          ],
+          "query": [],
+          "variable": []
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "// Tests",
+              "pm.test(\"Debe retornar 200 OK\", function() {",
+              "  pm.expect(pm.response.code).to.equal(200);",
+              "});",
+              "",
+              "pm.test(\"El resultado debe ser un arreglo de productos\", function() {",
+              "  pm.expect(pm.response.json()).to.be.an(\"array\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Consultar productos por categoria",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{baseUrl}}/api/productos/categoria/{{categoriaId}}",
+          "protocol": "",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "productos",
+            "categoria",
+            "{{categoriaId}}"
+          ],
+          "query": [],
+          "variable": []
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "// Tests",
+              "pm.test(\"Debe retornar 200 OK\", function() {",
+              "  pm.expect(pm.response.code).to.equal(200);",
+              "});",
+              "",
+              "pm.test(\"Debe devolver al menos 1 producto y coincidir la categoria\", function() {",
+              "  const productos = pm.response.json();",
+              "  pm.expect(productos.length).to.be.greaterThan(0);",
+              "  pm.expect(productos[0].categoriaId).to.equal(pm.variables.get(\"categoriaId\"));",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Intentar registrar producto duplicado",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{baseUrl}}/api/productos",
+          "protocol": "",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "productos"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"prod test {{testSufijo}}\", \n  \"descripcion\": \"Intento de duplicado (diferente casing)\",\n  \"precio\": 50,\n  \"stock\": 5,\n  \"categoriaId\": {{categoriaId}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "// Tests",
+              "pm.test(\"Debe retornar 409 Conflict por regla de negocio\", function() {",
+              "  pm.expect(pm.response.code).to.equal(409);",
+              "});",
+              "",
+              "pm.test(\"El mensaje debe indicar un conflicto\", function() {",
+              "  pm.expect(pm.response.json().mensaje).to.include(\"Conflicto\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Intentar registrar con categoria inexistente",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{baseUrl}}/api/productos",
+          "protocol": "",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "productos"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Prod Test FakeCat {{testSufijo}}\",\n  \"descripcion\": \"Asociado a una categoria que no existe\",\n  \"precio\": 25,\n  \"stock\": 100,\n  \"categoriaId\": 999999\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "// Tests",
+              "pm.test(\"Debe retornar 409 Conflict\", function() {",
+              "  pm.expect(pm.response.code).to.equal(409);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Intentar eliminar categoria con productos asociados",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{baseUrl}}/api/categorias/{{categoriaId}}",
+          "protocol": "",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "categorias",
+            "{{categoriaId}}"
+          ],
+          "query": [],
+          "variable": []
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "// Tests",
+              "pm.test(\"Debe retornar 409 Conflict\", function() {",
+              "  pm.expect(pm.response.code).to.equal(409);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Modificar un producto",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{baseUrl}}/api/productos/{{productoId}}",
+          "protocol": "",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "productos",
+            "{{productoId}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Prod Test {{testSufijo}} Modificado\",\n  \"descripcion\": \"Actualizando stock y precio\",\n  \"precio\": 199.99,\n  \"stock\": 42,\n  \"categoriaId\": {{categoriaId}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "// Tests",
+              "pm.test(\"Debe retornar 200 OK\", function() {",
+              "  pm.expect(pm.response.code).to.equal(200);",
+              "});",
+              "",
+              "pm.test(\"Los valores de precio y stock deben estar actualizados\", function() {",
+              "  pm.expect(pm.response.json().precio).to.equal(199.99);",
+              "  pm.expect(pm.response.json().stock).to.equal(42);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Eliminar un producto",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{baseUrl}}/api/productos/{{productoId}}",
+          "protocol": "",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "productos",
+            "{{productoId}}"
+          ],
+          "query": [],
+          "variable": []
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "// Tests",
+              "pm.test(\"Debe retornar 204 No Content\", function() {",
+              "  pm.expect(pm.response.code).to.equal(204);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Eliminar categoria (Limpieza final)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "{{baseUrl}}/api/categorias/{{categoriaId}}",
+          "protocol": "",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "categorias",
+            "{{categoriaId}}"
+          ],
+          "query": [],
+          "variable": []
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "// Tests",
+              "pm.test(\"Debe retornar 204 No Content porque ya no tiene productos\", function() {",
+              "  pm.expect(pm.response.code).to.equal(204);",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "testSufijo",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "categoriaId",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "productoId",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
