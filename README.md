@@ -71,21 +71,11 @@ Edite el archivo `InventarioApiVB/appsettings.json` según su instancia de SQL S
   "InventarioDB": "Server=localhost;Database=InventarioDB;Trusted_Connection=True;TrustServerCertificate=True;"
 }
 ```
-*(Si utiliza SQL Server Express, cambie `Server=localhost` por `Server=.\SQLEXPRESS`; si utiliza LocalDB, use `Server=(localdb)\mssqllocaldb`).*
 
-### Paso 2: Crear la base de datos (dos opciones disponibles)
 
-- **Opción A — Mediante Migraciones de Entity Framework Core:**
-  Desde la **Consola del Administrador de Paquetes** en Visual Studio:
-  ```powershell
-  Update-Database
-  ```
-  O desde la terminal en la carpeta `InventarioApiVB/InventarioApiVB`:
-  ```bash
-  dotnet ef database update
-  ```
+### Paso 2: Crear la base de datos
 
-- **Opción B — Mediante Script SQL:**
+- **Mediante Script SQL:**
   Ejecute el archivo `Scripts/InventarioDB.sql` en **SQL Server Management Studio (SSMS)**.
 
 ---
@@ -94,7 +84,7 @@ Edite el archivo `InventarioApiVB/appsettings.json` según su instancia de SQL S
 
 1. Abra `InventarioApiVB.sln` en Visual Studio 2022 y presione **F5** (o ejecute `dotnet run --project InventarioApiVB` desde la terminal).
 2. El navegador abrirá automáticamente la interfaz de **Swagger UI** en:
-   - `https://localhost:7210/swagger` o `http://localhost:5210/swagger`
+   - `http://localhost:7210/swagger/index.html)`
 
 ---
 
@@ -147,3 +137,5 @@ Edite el archivo `InventarioApiVB/appsettings.json` según su instancia de SQL S
 7. **Intentar eliminar categoría con productos asociados** (`DELETE /api/categorias/1`) -> `409 Conflict`.
 8. **Modificar producto** (`PUT /api/productos/1`) -> `200 OK`.
 9. **Eliminar producto** (`DELETE /api/productos/1`) -> `204 No Content`.
+
+10. Colección bruno para pruebas: disponible en "Inventario API Tests"
