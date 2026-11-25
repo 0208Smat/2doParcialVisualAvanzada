@@ -84,7 +84,7 @@ Edite el archivo `InventarioApiVB/appsettings.json` según su instancia de SQL S
 
 1. Abra `InventarioApiVB.sln` en Visual Studio 2022 y presione **F5** (o ejecute `dotnet run --project InventarioApiVB` desde la terminal).
 2. El navegador abrirá automáticamente la interfaz de **Swagger UI** en:
-   - `http://localhost:7210/swagger/index.html)`
+   - `https://localhost:54628/swagger/index.html`
 
 ---
 
@@ -138,4 +138,4 @@ Edite el archivo `InventarioApiVB/appsettings.json` según su instancia de SQL S
 8. **Modificar producto** (`PUT /api/productos/1`) -> `200 OK`.
 9. **Eliminar producto** (`DELETE /api/productos/1`) -> `204 No Content`.
 
-10. Colección bruno para pruebas: disponible en "Inventario API Tests"
+10. Colección bruno para pruebas y evidencias: disponible en "Inventario API Tests"
